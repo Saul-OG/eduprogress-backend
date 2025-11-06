@@ -22,8 +22,7 @@ use App\Http\Controllers\ReportController;
 |--------------------------------------------------------------------------
 */
 
-// --- Salud rápida ---
-Route::get('/ping', fn () => response()->json(['message' => 'API OK']));
+
 
 // --- CORS preflight opcional (útil en dev SPA) ---
 Route::options('/{any}', fn () => response()->noContent())->where('any', '.*');
@@ -32,8 +31,8 @@ Route::options('/{any}', fn () => response()->noContent())->where('any', '.*');
 // 🔓 RUTAS PÚBLICAS
 // ===================================================
 Route::controller(AuthController::class)->group(function () {
-    Route::post('/register', 'register');
-    Route::post('/login', 'login');
+    Route::post('/register', 'register')->name('register');
+    Route::post('/login', 'login')->name('login');
     Route::post('/forgot-password', 'forgotPassword');
     Route::post('/reset-password', 'resetPassword');
 });
@@ -58,7 +57,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // --- Usuario ---
     Route::get('/lives', [UserController::class, 'getLives']);
-    Route::post('/login', [UserController::class, 'login']);
 
     // --- Progreso de usuario ---
     Route::get('/subjects/user/progress', [SubjectController::class, 'getUserProgress']);
@@ -107,3 +105,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
     });
 });
+Route::get('/ping', fn () => response()->json(['ok' => true, 'ts' => now()]));

@@ -25,23 +25,24 @@ class AuthController extends Controller
 
         $token = $user->createToken('api')->plainTextToken;
 
-        return response()->json(['user'=>$user,'token'=>$token], 201);
+        return response()->json(['user'=>$user,'access_token'=>$token], 201);
     }
 
     public function login(Request $r)
     {
         $data = $r->validate([
-            'email'=> 'required|email',
+            'username'=> 'required|email',
             'password' => 'required|string'
         ]);
 
-        $user = User::where('email',$data['email'])->first();
+        $user = User::where('email',$data['username'])->first();
+
         if(!$user || !Hash::check($data['password'], $user->password)){
             return response()->json(['message'=>'Credenciales inválidas'], 401);
         }
         $token = $user->createToken('api')->plainTextToken;
 
-        return response()->json(['user'=>$user,'token'=>$token]);
+        return response()->json(['user'=>$user,'access_token'=>$token]);
     }
 
     public function logout(Request $r)
